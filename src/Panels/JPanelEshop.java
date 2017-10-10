@@ -1,9 +1,8 @@
 package Panels;
 
 import Frames.MenuFrame;
-import Frames.NahledyFrame;
-import Frames.ObjednavkaFrame;
-import Frames.VyberDatumFrame;
+import java.awt.BorderLayout;
+import java.awt.Container;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
@@ -15,9 +14,8 @@ import java.text.SimpleDateFormat;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -37,6 +35,7 @@ public class JPanelEshop extends javax.swing.JPanel {
     public final void myInit() {
 
         jDialog1.setLocationRelativeTo(null);
+        //  jTextFieldOXID.setVisible(false);
 
         String[] sloupce = {"Číslo obj.", "Datum obj.", "Jméno", "Příjmení", "Město", "Stav"};
         DefaultTableModel model = new DefaultTableModel(sloupce, 0);
@@ -44,20 +43,20 @@ public class JPanelEshop extends javax.swing.JPanel {
         jTable2.setDefaultEditor(Object.class, null); //non editable cells
 
         model.setRowCount(0);
-        
+
         try {
             Connection conn = (Connection) DriverManager.getConnection(URL, "root", "");
-            String selectSQL = "SELECT ID_OBJ, DATUM, STAV, OXORDER.OXBILLFNAME, OXORDER.OXBILLLNAME, "
+            String selectSQL = "SELECT CISLO_OBJ, DATUM, STAV, OXORDER.OXBILLFNAME, OXORDER.OXBILLLNAME, "
                     + "OXORDER.OXBILLCITY FROM stav JOIN OXORDER ON STAV.OXID = OXORDER.OXID";
             PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
             ResultSet rset = preparedStatement.executeQuery();
 
             while (rset.next()) {
-                String idObj;
+                String cisloObj;
                 if (rset.getInt(1) == 0) {
-                    idObj = "";
+                    cisloObj = "";
                 } else {
-                    idObj = Integer.toString(rset.getInt(1));
+                    cisloObj = Integer.toString(rset.getInt(1));
                 }
                 String datumObj = format.format(rset.getDate(2));
                 String stav = "";
@@ -71,7 +70,7 @@ public class JPanelEshop extends javax.swing.JPanel {
                 String mesto = rset.getString(6);
                 Vector<Object> radek = new Vector<>();
 
-                radek.add(idObj);
+                radek.add(cisloObj);
                 radek.add(datumObj);
                 radek.add(jmeno);
                 radek.add(prijmeni);
@@ -82,7 +81,36 @@ public class JPanelEshop extends javax.swing.JPanel {
         } catch (SQLException ex) {
             Logger.getLogger(JPanelZakaznici.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
+        jTable2.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    try {
+                        int sRow = jTable2.getSelectedRow();
+
+                        /*
+                        Connection conn = (Connection) DriverManager.getConnection(URL, "root", "");
+
+                        PreparedStatement stmtNazev = conn.prepareStatement("SELECT OXID FROM OXORDER WHERE OXBILLFNAME = ? AND ");
+                        stmtNazev.setInt(1, Integer.parseInt(jTable2.getValueAt(radek, 0).toString()));
+                        ResultSet rs = stmtNazev.executeQuery();
+                        */    
+                        
+                        JFrame frame = new JFrame();
+                        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                        frame.add(new JPanelZakazniciEshop(), BorderLayout.CENTER);
+                        frame.pack();
+                        frame.setVisible(true);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(JPanelEshop.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                }
+            }
+
+        });
+
     }
 
     @SuppressWarnings("unchecked")
@@ -96,6 +124,7 @@ public class JPanelEshop extends javax.swing.JPanel {
         jTable2 = new javax.swing.JTable();
         jButtonAdd = new javax.swing.JButton();
         jButtonRenew = new javax.swing.JButton();
+        jTextFieldOXID = new javax.swing.JTextField();
 
         jDialog1.setTitle("Seznam zákazníků");
         jDialog1.setMinimumSize(new java.awt.Dimension(1000, 400));
@@ -155,18 +184,18 @@ public class JPanelEshop extends javax.swing.JPanel {
                 jButtonAddActionPerformed(evt);
             }
         });
-        add(jButtonAdd, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 500, 80, 30));
+        add(jButtonAdd, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 500, 80, 30));
 
         jButtonRenew.setText("Obnovit");
-        jButtonRenew.setMaximumSize(new java.awt.Dimension(71, 23));
-        jButtonRenew.setMinimumSize(new java.awt.Dimension(71, 23));
-        jButtonRenew.setPreferredSize(new java.awt.Dimension(71, 23));
         jButtonRenew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonRenewActionPerformed(evt);
             }
         });
-        add(jButtonRenew, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 500, 80, 30));
+        add(jButtonRenew, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 500, 80, 30));
+
+        jTextFieldOXID.setEditable(false);
+        add(jTextFieldOXID, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 500, 80, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddActionPerformed
@@ -319,5 +348,6 @@ public class JPanelEshop extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
+    private javax.swing.JTextField jTextFieldOXID;
     // End of variables declaration//GEN-END:variables
 }

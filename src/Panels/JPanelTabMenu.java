@@ -39,7 +39,6 @@ public final class JPanelTabMenu extends javax.swing.JPanel {
         JComponent panel3 = new JPanelEshop();
         panel3.setBorder(bGreyLine);
         tabbedPane.addTab("Nahrát z Eshopu", panel3);
-
         
         add(tabbedPane);
 

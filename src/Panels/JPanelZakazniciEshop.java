@@ -145,7 +145,6 @@ public class JPanelZakazniciEshop extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jTextFieldPSC = new javax.swing.JTextField();
-        jTextFieldFind = new javax.swing.JTextField();
         jButtonFind = new javax.swing.JButton();
         jLabelPopisne = new javax.swing.JLabel();
         jTextFieldMobil = new javax.swing.JTextField();
@@ -209,9 +208,6 @@ public class JPanelZakazniciEshop extends javax.swing.JPanel {
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
         add(jTextFieldPSC, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 330, 170, 30));
 
-        jTextFieldFind.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        add(jTextFieldFind, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, 440, 30));
-
         jButtonFind.setText("Hledat");
         jButtonFind.setActionCommand("Najít");
         jButtonFind.addActionListener(new java.awt.event.ActionListener() {
@@ -219,7 +215,7 @@ public class JPanelZakazniciEshop extends javax.swing.JPanel {
                 jButtonFindActionPerformed(evt);
             }
         });
-        add(jButtonFind, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 30, 100, -1));
+        add(jButtonFind, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 30, 100, -1));
 
         jLabelPopisne.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabelPopisne.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -356,15 +352,15 @@ public class JPanelZakazniciEshop extends javax.swing.JPanel {
     private void refresh() {
 
         try {
-            String str = jTextFieldFind.getText();
+           // String str = jTextFieldFind.getText();
             Connection conn = (Connection) DriverManager.getConnection(URL, "root", "");
             String selectSQL = "SELECT ID_ZAKAZNIK, JMENO, PRIJMENI, ULICE, POPISNE, MESTO, PSC, FIRMA, TEL, MOBIL"
                     + " FROM zakaznici WHERE LOWER(JMENO) LIKE LOWER(?) or LOWER(PRIJMENI) LIKE LOWER(?)"
                     + " or LOWER(MESTO) LIKE LOWER(?) ORDER BY ID_ZAKAZNIK ASC";
             PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
-            preparedStatement.setString(1, "%" + str + "%");
-            preparedStatement.setString(2, "%" + str + "%");
-            preparedStatement.setString(3, "%" + str + "%");
+       //     preparedStatement.setString(1, "%" + str + "%");
+       //     preparedStatement.setString(2, "%" + str + "%");
+       //     preparedStatement.setString(3, "%" + str + "%");
             ResultSet rset = preparedStatement.executeQuery();
 
             String[] sloupce = {"Kód zákazníka", "Jméno", "Příjmeni", "Ulice", "Popisné", "Město", "PSČ", "Firma", "Telefon", "Mobil"};
@@ -508,7 +504,6 @@ public class JPanelZakazniciEshop extends javax.swing.JPanel {
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
     private javax.swing.JTextField jTextFieldEmail;
-    private javax.swing.JTextField jTextFieldFind;
     private javax.swing.JTextField jTextFieldFirma;
     private javax.swing.JTextField jTextFieldIDZakaznik;
     private javax.swing.JTextField jTextFieldJmeno;
