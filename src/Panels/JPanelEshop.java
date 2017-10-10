@@ -47,25 +47,31 @@ public class JPanelEshop extends javax.swing.JPanel {
         
         try {
             Connection conn = (Connection) DriverManager.getConnection(URL, "root", "");
-            String selectSQL = "SELECT DATUM, STAV, OXORDER.OXBILLFNAME, OXORDER.OXBILLLNAME, "
+            String selectSQL = "SELECT ID_OBJ, DATUM, STAV, OXORDER.OXBILLFNAME, OXORDER.OXBILLLNAME, "
                     + "OXORDER.OXBILLCITY FROM stav JOIN OXORDER ON STAV.OXID = OXORDER.OXID";
             PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
             ResultSet rset = preparedStatement.executeQuery();
 
             while (rset.next()) {
-                String datumObj = format.format(rset.getDate(1));
+                String idObj;
+                if (rset.getInt(1) == 0) {
+                    idObj = "";
+                } else {
+                    idObj = Integer.toString(rset.getInt(1));
+                }
+                String datumObj = format.format(rset.getDate(2));
                 String stav = "";
-                if (rset.getInt(2) == 0) {
+                if (rset.getInt(3) == 0) {
                     stav = "Nepřidáno";
-                } else if (rset.getInt(2) == 1) {
+                } else if (rset.getInt(3) == 1) {
                     stav = "Přidáno";
                 }
-                String jmeno = rset.getString(3);
-                String prijmeni = rset.getString(4);
-                String mesto = rset.getString(5);
+                String jmeno = rset.getString(4);
+                String prijmeni = rset.getString(5);
+                String mesto = rset.getString(6);
                 Vector<Object> radek = new Vector<>();
 
-                radek.add("");
+                radek.add(idObj);
                 radek.add(datumObj);
                 radek.add(jmeno);
                 radek.add(prijmeni);
@@ -76,7 +82,7 @@ public class JPanelEshop extends javax.swing.JPanel {
         } catch (SQLException ex) {
             Logger.getLogger(JPanelZakaznici.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        
     }
 
     @SuppressWarnings("unchecked")
