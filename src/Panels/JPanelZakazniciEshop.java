@@ -24,7 +24,10 @@ import javax.swing.table.DefaultTableModel;
  */
 public class JPanelZakazniciEshop extends javax.swing.JPanel {
 
-    public JPanelZakazniciEshop() throws SQLException {
+    String OXID;
+
+    public JPanelZakazniciEshop(String OXID) throws SQLException {
+        this.OXID = OXID;
         initComponents();
         myInit();
     }
@@ -41,6 +44,44 @@ public class JPanelZakazniciEshop extends javax.swing.JPanel {
         jTable2.setModel(model);
         jTable2.setDefaultEditor(Object.class, null); //non editable cells
 
+        try {
+            Connection conn = (Connection) DriverManager.getConnection(URL, "root", "");
+            String selectSQL = "SELECT ID_ZAKAZNIK, JMENO, PRIJMENI, ULICE, POPISNE, MESTO, PSC, FIRMA, TEL, MOBIL"
+                    + " FROM zakaznici WHERE OXID = ?";
+            PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
+            PreparedStatement.setString(1, OXID);
+            ResultSet rset = preparedStatement.executeQuery();
+
+            while (rset.next()) {
+                int id = rset.getInt("ID_ZAKAZNIK");
+                String jmeno = rset.getString("JMENO");
+                String prijmeni = rset.getString("PRIJMENI");
+                String ulice = rset.getString("ULICE");
+                String popisne = rset.getString("POPISNE");
+                String mesto = rset.getString("MESTO");
+                int psc = rset.getInt("PSC");
+                String firma = rset.getString("FIRMA");
+                String tel = rset.getString("TEL");
+                String mobil = rset.getString("MOBIL");
+                Vector<Object> radek = new Vector<>();
+
+                radek.add(id);
+                radek.add(jmeno);
+                radek.add(prijmeni);
+                radek.add(ulice);
+                radek.add(popisne);
+                radek.add(mesto);
+                radek.add(psc);
+                radek.add(firma);
+                radek.add(tel);
+                radek.add(mobil);
+                model.addRow(radek);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(JPanelZakazniciEshop.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         jTable1.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
             if (jTable1.getSelectedRow() > -1) {
                 jTextFieldIDZakaznik.setText(jTable1.getValueAt((int) jTable1.getSelectedRow(), 0).toString());
@@ -55,9 +96,9 @@ public class JPanelZakazniciEshop extends javax.swing.JPanel {
                 jTextFieldMobil.setText(jTable1.getValueAt((int) jTable1.getSelectedRow(), 9).toString());
             }
         });
-        
+
         model.addRow(new Vector<>());
-        
+
         jTable1.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -352,15 +393,15 @@ public class JPanelZakazniciEshop extends javax.swing.JPanel {
     private void refresh() {
 
         try {
-           // String str = jTextFieldFind.getText();
+            // String str = jTextFieldFind.getText();
             Connection conn = (Connection) DriverManager.getConnection(URL, "root", "");
             String selectSQL = "SELECT ID_ZAKAZNIK, JMENO, PRIJMENI, ULICE, POPISNE, MESTO, PSC, FIRMA, TEL, MOBIL"
                     + " FROM zakaznici WHERE LOWER(JMENO) LIKE LOWER(?) or LOWER(PRIJMENI) LIKE LOWER(?)"
                     + " or LOWER(MESTO) LIKE LOWER(?) ORDER BY ID_ZAKAZNIK ASC";
             PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
-       //     preparedStatement.setString(1, "%" + str + "%");
-       //     preparedStatement.setString(2, "%" + str + "%");
-       //     preparedStatement.setString(3, "%" + str + "%");
+            //     preparedStatement.setString(1, "%" + str + "%");
+            //     preparedStatement.setString(2, "%" + str + "%");
+            //     preparedStatement.setString(3, "%" + str + "%");
             ResultSet rset = preparedStatement.executeQuery();
 
             String[] sloupce = {"Kód zákazníka", "Jméno", "Příjmeni", "Ulice", "Popisné", "Město", "PSČ", "Firma", "Telefon", "Mobil"};

@@ -31,11 +31,13 @@ public class JPanelEshop extends javax.swing.JPanel {
 
     private SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
     private static final String URL = "jdbc:mysql://localhost/objednavky?useUnicode=true&characterEncoding=UTF-8";
-
+   
+    
     public final void myInit() {
 
         jDialog1.setLocationRelativeTo(null);
         //  jTextFieldOXID.setVisible(false);
+        Vector<Object> vOXID = new Vector<>();
 
         String[] sloupce = {"Číslo obj.", "Datum obj.", "Jméno", "Příjmení", "Město", "Stav"};
         DefaultTableModel model = new DefaultTableModel(sloupce, 0);
@@ -46,7 +48,7 @@ public class JPanelEshop extends javax.swing.JPanel {
 
         try {
             Connection conn = (Connection) DriverManager.getConnection(URL, "root", "");
-            String selectSQL = "SELECT CISLO_OBJ, DATUM, STAV, OXORDER.OXBILLFNAME, OXORDER.OXBILLLNAME, "
+            String selectSQL = "SELECT CISLO_OBJ, STAV.OXID, DATUM, STAV, OXORDER.OXBILLFNAME, OXORDER.OXBILLLNAME, "
                     + "OXORDER.OXBILLCITY FROM stav JOIN OXORDER ON STAV.OXID = OXORDER.OXID";
             PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
             ResultSet rset = preparedStatement.executeQuery();
@@ -58,16 +60,18 @@ public class JPanelEshop extends javax.swing.JPanel {
                 } else {
                     cisloObj = Integer.toString(rset.getInt(1));
                 }
-                String datumObj = format.format(rset.getDate(2));
+                
+                vOXID.add(rset.getString(2));
+                String datumObj = format.format(rset.getDate(3));
                 String stav = "";
-                if (rset.getInt(3) == 0) {
+                if (rset.getInt(4) == 0) {
                     stav = "Nepřidáno";
-                } else if (rset.getInt(3) == 1) {
+                } else if (rset.getInt(4) == 1) {
                     stav = "Přidáno";
                 }
-                String jmeno = rset.getString(4);
-                String prijmeni = rset.getString(5);
-                String mesto = rset.getString(6);
+                String jmeno = rset.getString(5);
+                String prijmeni = rset.getString(6);
+                String mesto = rset.getString(7);
                 Vector<Object> radek = new Vector<>();
 
                 radek.add(cisloObj);
@@ -88,18 +92,11 @@ public class JPanelEshop extends javax.swing.JPanel {
                 if (e.getClickCount() == 2) {
                     try {
                         int sRow = jTable2.getSelectedRow();
-
-                        /*
-                        Connection conn = (Connection) DriverManager.getConnection(URL, "root", "");
-
-                        PreparedStatement stmtNazev = conn.prepareStatement("SELECT OXID FROM OXORDER WHERE OXBILLFNAME = ? AND ");
-                        stmtNazev.setInt(1, Integer.parseInt(jTable2.getValueAt(radek, 0).toString()));
-                        ResultSet rs = stmtNazev.executeQuery();
-                        */    
-                        
+                        String OXID = "";
+                        OXID = vOXID.elementAt(0).toString();
                         JFrame frame = new JFrame();
                         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                        frame.add(new JPanelZakazniciEshop(), BorderLayout.CENTER);
+                        frame.add(new JPanelZakazniciEshop(OXID), BorderLayout.CENTER);
                         frame.pack();
                         frame.setVisible(true);
                     } catch (SQLException ex) {
