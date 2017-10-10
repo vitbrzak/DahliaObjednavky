@@ -32,19 +32,52 @@ public class JPanelEshop extends javax.swing.JPanel {
     }
 
     private SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+    private static final String URL = "jdbc:mysql://localhost/objednavky?useUnicode=true&characterEncoding=UTF-8";
 
     public final void myInit() {
 
         jDialog1.setLocationRelativeTo(null);
 
-        String[] sloupce = {"Datum obj.", "Jméno", "Příjmení", "Ulice", "Popisné", "Město", "PSČ"};
+        String[] sloupce = {"Číslo obj.", "Datum obj.", "Jméno", "Příjmení", "Město", "Stav"};
         DefaultTableModel model = new DefaultTableModel(sloupce, 0);
         jTable2.setModel(model);
         jTable2.setDefaultEditor(Object.class, null); //non editable cells
-        
-        
-    }
 
+        model.setRowCount(0);
+        
+        try {
+            Connection conn = (Connection) DriverManager.getConnection(URL, "root", "");
+            String selectSQL = "SELECT DATUM, STAV, OXORDER.OXBILLFNAME, OXORDER.OXBILLLNAME, "
+                    + "OXORDER.OXBILLCITY FROM stav JOIN OXORDER ON STAV.OXID = OXORDER.OXID";
+            PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
+            ResultSet rset = preparedStatement.executeQuery();
+
+            while (rset.next()) {
+                String datumObj = format.format(rset.getDate(1));
+                String stav = "";
+                if (rset.getInt(2) == 0) {
+                    stav = "Nepřidáno";
+                } else if (rset.getInt(2) == 1) {
+                    stav = "Přidáno";
+                }
+                String jmeno = rset.getString(3);
+                String prijmeni = rset.getString(4);
+                String mesto = rset.getString(5);
+                Vector<Object> radek = new Vector<>();
+
+                radek.add("");
+                radek.add(datumObj);
+                radek.add(jmeno);
+                radek.add(prijmeni);
+                radek.add(mesto);
+                radek.add(stav);
+                model.addRow(radek);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(JPanelZakaznici.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -131,11 +164,11 @@ public class JPanelEshop extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddActionPerformed
-      //  modify(Work.add);
+        //  modify(Work.add);
     }//GEN-LAST:event_jButtonAddActionPerformed
 
     private void jButtonRenewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRenewActionPerformed
-      //  modify(Work.renew);
+        //  modify(Work.renew);
     }//GEN-LAST:event_jButtonRenewActionPerformed
 
     /*
@@ -271,7 +304,7 @@ public class JPanelEshop extends javax.swing.JPanel {
     private enum Work {
         add, renew
     }
-    */
+     */
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAdd;
     private javax.swing.JButton jButtonRenew;
