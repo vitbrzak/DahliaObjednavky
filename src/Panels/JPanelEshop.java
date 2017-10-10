@@ -92,8 +92,7 @@ public class JPanelEshop extends javax.swing.JPanel {
                 if (e.getClickCount() == 2) {
                     try {
                         int sRow = jTable2.getSelectedRow();
-                        String OXID = "";
-                        OXID = vOXID.elementAt(0).toString();
+                        String OXID = vOXID.elementAt(sRow).toString();
                         JFrame frame = new JFrame();
                         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                         frame.add(new JPanelZakazniciEshop(OXID), BorderLayout.CENTER);
@@ -120,8 +119,7 @@ public class JPanelEshop extends javax.swing.JPanel {
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
         jButtonAdd = new javax.swing.JButton();
-        jButtonRenew = new javax.swing.JButton();
-        jTextFieldOXID = new javax.swing.JTextField();
+        jButtonRefresh = new javax.swing.JButton();
 
         jDialog1.setTitle("Seznam zákazníků");
         jDialog1.setMinimumSize(new java.awt.Dimension(1000, 400));
@@ -183,25 +181,22 @@ public class JPanelEshop extends javax.swing.JPanel {
         });
         add(jButtonAdd, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 500, 80, 30));
 
-        jButtonRenew.setText("Obnovit");
-        jButtonRenew.addActionListener(new java.awt.event.ActionListener() {
+        jButtonRefresh.setText("Obnovit");
+        jButtonRefresh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonRenewActionPerformed(evt);
+                jButtonRefreshActionPerformed(evt);
             }
         });
-        add(jButtonRenew, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 500, 80, 30));
-
-        jTextFieldOXID.setEditable(false);
-        add(jTextFieldOXID, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 500, 80, -1));
+        add(jButtonRefresh, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 500, 80, 30));
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddActionPerformed
         //  modify(Work.add);
     }//GEN-LAST:event_jButtonAddActionPerformed
 
-    private void jButtonRenewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRenewActionPerformed
-        //  modify(Work.renew);
-    }//GEN-LAST:event_jButtonRenewActionPerformed
+    private void jButtonRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRefreshActionPerformed
+        //  modify(Work.refresh);
+    }//GEN-LAST:event_jButtonRefreshActionPerformed
 
     /*
     private void refresh() {
@@ -334,17 +329,16 @@ public class JPanelEshop extends javax.swing.JPanel {
     }
     
     private enum Work {
-        add, renew
+        add, refresh
     }
      */
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAdd;
-    private javax.swing.JButton jButtonRenew;
+    private javax.swing.JButton jButtonRefresh;
     private javax.swing.JDialog jDialog1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
-    private javax.swing.JTextField jTextFieldOXID;
     // End of variables declaration//GEN-END:variables
 }
