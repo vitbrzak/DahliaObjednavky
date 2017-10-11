@@ -90,8 +90,7 @@ public class JPanelZakaznici extends javax.swing.JPanel {
                                 model.addRow(radek);
                             }
                         } catch (SQLException ex) {
-                            Logger.getLogger(JPanelZakaznici.class.getName()).log(Level.SEVERE, null, ex);
-                            JOptionPane.showMessageDialog(new JFrame(), "Chyba databáze");
+                            Logger.getLogger(JPanelZakaznici.class.getName()).log(Level.SEVERE, null, ex);                       
                         }
                     }
                     model.addRow(new Vector<>());
@@ -128,7 +127,6 @@ public class JPanelZakaznici extends javax.swing.JPanel {
 
                             } catch (SQLException ex) {
                                 Logger.getLogger(JPanelObjednavka.class.getName()).log(Level.SEVERE, null, ex);
-                                JOptionPane.showMessageDialog(new JFrame(), "Chyba databáze");
                             }
                         }
                         ObjednavkaFrame frame = new ObjednavkaFrame(Integer.parseInt(jTextFieldIDZakaznik.getText()), idObj, cisloObj, datum, doprava);
@@ -406,7 +404,6 @@ public class JPanelZakaznici extends javax.swing.JPanel {
             jDialog1.setVisible(true);
         } catch (SQLException ex) {
             Logger.getLogger(JPanelZakaznici.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(new JFrame(), "Chyba databáze");
         }
     }
 
@@ -529,7 +526,6 @@ public class JPanelZakaznici extends javax.swing.JPanel {
 
         } catch (SQLException ex) {
             Logger.getLogger(JPanelZakazniciEshop.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(new JFrame(), "Chyba databáze");
         }
     }
     
@@ -546,7 +542,6 @@ public class JPanelZakaznici extends javax.swing.JPanel {
             }
         } catch (SQLException ex) {
             Logger.getLogger(JPanelObjednavka.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(new JFrame(), "Chyba databáze");
         }
         return maxID;
     }

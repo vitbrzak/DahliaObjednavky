@@ -84,7 +84,6 @@ public class JPanelEshop extends javax.swing.JPanel {
             }
         } catch (SQLException ex) {
             Logger.getLogger(JPanelZakaznici.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(new JFrame(), "Chyba databáze");
         }
 
         jTable2.addMouseListener(new MouseAdapter() {

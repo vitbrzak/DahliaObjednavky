@@ -25,7 +25,7 @@ import javax.swing.table.DefaultTableModel;
 public class JPanelZakazniciEshop extends javax.swing.JPanel {
 
     String OXID;
-    
+
     public JPanelZakazniciEshop(String OXID) throws SQLException {
         this.OXID = OXID;
         initComponents();
@@ -34,7 +34,7 @@ public class JPanelZakazniciEshop extends javax.swing.JPanel {
 
     private final SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
     private static final String URL = "jdbc:mysql://localhost/objednavky?useUnicode=true&characterEncoding=UTF-8";
-    
+
     public final void myInit() throws SQLException {
 
         jDialog1.setLocationRelativeTo(null);
@@ -92,6 +92,34 @@ public class JPanelZakazniciEshop extends javax.swing.JPanel {
             }
         });
 
+        try {
+            Connection conn = (Connection) DriverManager.getConnection(URL, "root", "");
+            String selectSQL = "SELECT DISTINCT stav.CISLO_OBJ, OXORDERDATE, OXDELTYPE"
+                    + " FROM OXORDER JOIN stav ON OXORDER.OXID = OXORDER.OXID"
+                    + " WHERE OXORDER.OXID = ?";
+            PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
+            preparedStatement.setString(1, OXID);
+            ResultSet rset = preparedStatement.executeQuery();
+
+            while (rset.next()) {
+                int cisloObj = rset.getInt(1);
+                String datumObj = format.format(rset.getDate("OXORDERDATE"));
+                String doprava = "";
+                if (rset.getString("OXDELTYPE").equals("9ee963415d05f96506e9b951b4c3a60c")) {
+                    doprava = "Poštou";
+                } else if (rset.getString("OXDELTYPE").equals("9eed66c9dcab62d43e376f1e2dbd6e89")) {
+                    doprava = "Osobně";
+                }
+                Vector<Object> radek = new Vector<>();
+
+                radek.add(cisloObj);
+                radek.add(datumObj);
+                radek.add(doprava);
+                model.addRow(radek);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(JPanelZakazniciEshop.class.getName()).log(Level.SEVERE, null, ex);
+        }
         model.addRow(new Vector<>());
 
         jTable1.addMouseListener(new MouseAdapter() {
@@ -127,6 +155,8 @@ public class JPanelZakazniciEshop extends javax.swing.JPanel {
                         } catch (SQLException ex) {
                             Logger.getLogger(JPanelZakazniciEshop.class.getName()).log(Level.SEVERE, null, ex);
                         }
+                    } else {
+                        JOptionPane.showMessageDialog(new JFrame(), "Není vybrán zákazník");
                     }
                     model.addRow(new Vector<>());
                 }
@@ -407,7 +437,7 @@ public class JPanelZakazniciEshop extends javax.swing.JPanel {
 
                     stmt.executeUpdate();
                     stmt.close();
-              //    refresh();
+                    //    refresh();
                 }
 
             }
@@ -447,7 +477,7 @@ public class JPanelZakazniciEshop extends javax.swing.JPanel {
                 String tel = rset.getString("TEL");
                 String mobil = rset.getString("MOBIL");
                 String email = rset.getString("EMAIL");
-                                
+
                 Vector<Object> radek = new Vector<>();
 
                 radek.add(id);
@@ -507,15 +537,13 @@ public class JPanelZakazniciEshop extends javax.swing.JPanel {
 
         } catch (SQLException ex) {
             Logger.getLogger(JPanelZakazniciEshop.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(new JFrame(), "Chyba databáze");
         }
     }
-    
+
     private int maxID() {
         int maxID = 0;
         try {
             Connection conn = (Connection) DriverManager.getConnection(URL, "root", "");
-            
 
             PreparedStatement stmtID = conn.prepareStatement("SELECT MAX(ID_ZAKAZNIK) FROM zakaznici");
             ResultSet rs = stmtID.executeQuery();
@@ -524,7 +552,6 @@ public class JPanelZakazniciEshop extends javax.swing.JPanel {
             }
         } catch (SQLException ex) {
             Logger.getLogger(JPanelObjednavka.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(new JFrame(), "Chyba databáze");
         }
         return maxID;
     }
