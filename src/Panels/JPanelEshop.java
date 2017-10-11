@@ -89,13 +89,18 @@ public class JPanelEshop extends javax.swing.JPanel {
         jTable2.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) {
+                if (e.getClickCount() == 1) {
                     try {
                         int sRow = jTable2.getSelectedRow();
                         String OXID = vOXID.elementAt(sRow).toString();
+                        Object objCheck = jTable2.getValueAt(sRow, 0);
+                        int idObj = 0;
+                        if (objCheck != "") {
+                            idObj = Integer.parseInt(jTable2.getValueAt(sRow, 0).toString());
+                        }
                         JFrame frame = new JFrame();
                         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                        frame.add(new JPanelZakazniciEshop(OXID), BorderLayout.CENTER);
+                        frame.add(new JPanelZakazniciEshop(OXID, idObj), BorderLayout.CENTER);
                         frame.pack();
                         frame.setVisible(true);
                     } catch (SQLException ex) {
@@ -152,6 +157,15 @@ public class JPanelEshop extends javax.swing.JPanel {
         setMinimumSize(new java.awt.Dimension(600, 550));
         setName(""); // NOI18N
         setPreferredSize(new java.awt.Dimension(600, 550));
+        addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                formAncestorAdded(evt);
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
@@ -181,6 +195,10 @@ public class JPanelEshop extends javax.swing.JPanel {
     private void jButtonRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRefreshActionPerformed
         myInit();
     }//GEN-LAST:event_jButtonRefreshActionPerformed
+
+    private void formAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_formAncestorAdded
+        myInit();
+    }//GEN-LAST:event_formAncestorAdded
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

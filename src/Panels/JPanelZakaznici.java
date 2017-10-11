@@ -37,8 +37,8 @@ public class JPanelZakaznici extends javax.swing.JPanel {
         jDialog1.setLocationRelativeTo(null);
 
         String[] sloupce = {"Číslo objednávky", "Datum objednání", "Způsob odběru"};
-        DefaultTableModel model = new DefaultTableModel(sloupce, 0);
-        jTable2.setModel(model);
+        DefaultTableModel model2 = new DefaultTableModel(sloupce, 0);
+        jTable2.setModel(model2);
         jTable2.setDefaultEditor(Object.class, null); //non editable cells
 
         jTable1.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
@@ -57,13 +57,13 @@ public class JPanelZakaznici extends javax.swing.JPanel {
             }
         });
 
-        model.addRow(new Vector<>());
+        model2.addRow(new Vector<>());
 
         jTable1.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 1) {
-                    model.setRowCount(0);
+                    model2.setRowCount(0);
                     if (!"".equals(jTextFieldIDZakaznik.getText())) {
                         try {
                             Connection conn = (Connection) DriverManager.getConnection(URL, "root", "");
@@ -87,13 +87,13 @@ public class JPanelZakaznici extends javax.swing.JPanel {
                                 radek.add(cisloObj);
                                 radek.add(datumObj);
                                 radek.add(doprava);
-                                model.addRow(radek);
+                                model2.addRow(radek);
                             }
                         } catch (SQLException ex) {
                             Logger.getLogger(JPanelZakaznici.class.getName()).log(Level.SEVERE, null, ex);                       
                         }
                     }
-                    model.addRow(new Vector<>());
+                    model2.addRow(new Vector<>());
                 }
             }
         });
@@ -101,7 +101,7 @@ public class JPanelZakaznici extends javax.swing.JPanel {
         jTable2.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 1) {
+                if (e.getClickCount() == 2) {
                     if (!"".equals(jTextFieldIDZakaznik.getText())) {
                         int radek = jTable2.getSelectedRow();
                         Object test = jTable2.getValueAt(radek, 0);

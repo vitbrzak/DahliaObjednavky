@@ -25,8 +25,10 @@ import javax.swing.table.DefaultTableModel;
 public class JPanelZakazniciEshop extends javax.swing.JPanel {
 
     String OXID;
+    int idObj; 
 
-    public JPanelZakazniciEshop(String OXID) throws SQLException {
+    public JPanelZakazniciEshop(String OXID, int idObj) throws SQLException {
+        this.idObj = idObj;
         this.OXID = OXID;
         initComponents();
         myInit();
@@ -40,8 +42,8 @@ public class JPanelZakazniciEshop extends javax.swing.JPanel {
         jDialog1.setLocationRelativeTo(null);
 
         String[] sloupce = {"Číslo objednávky", "Datum objednání", "Způsob odběru"};
-        DefaultTableModel model = new DefaultTableModel(sloupce, 0);
-        jTable2.setModel(model);
+        DefaultTableModel model2 = new DefaultTableModel(sloupce, 0);
+        jTable2.setModel(model2);
         jTable2.setDefaultEditor(Object.class, null); //non editable cells
 
         try {
@@ -88,14 +90,14 @@ public class JPanelZakazniciEshop extends javax.swing.JPanel {
                 jTextFieldMesto.setText(jTable1.getValueAt((int) jTable1.getSelectedRow(), 5).toString());
                 jTextFieldPSC.setText(jTable1.getValueAt((int) jTable1.getSelectedRow(), 6).toString());
                 jTextFieldTel.setText(jTable1.getValueAt((int) jTable1.getSelectedRow(), 8).toString());
-                jTextFieldEmail.setText(jTable1.getValueAt((int) jTable1.getSelectedRow(), 9).toString());
+                jTextFieldEmail.setText(jTable1.getValueAt((int) jTable1.getSelectedRow(), 10).toString());
             }
         });
 
         try {
             Connection conn = (Connection) DriverManager.getConnection(URL, "root", "");
             String selectSQL = "SELECT DISTINCT stav.CISLO_OBJ, OXORDERDATE, OXDELTYPE"
-                    + " FROM OXORDER JOIN stav ON OXORDER.OXID = OXORDER.OXID"
+                    + " FROM stav JOIN OXORDER ON stav.OXID = OXORDER.OXID"
                     + " WHERE OXORDER.OXID = ?";
             PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
             preparedStatement.setString(1, OXID);
@@ -115,18 +117,20 @@ public class JPanelZakazniciEshop extends javax.swing.JPanel {
                 radek.add(cisloObj);
                 radek.add(datumObj);
                 radek.add(doprava);
-                model.addRow(radek);
+                model2.addRow(radek);
             }
         } catch (SQLException ex) {
             Logger.getLogger(JPanelZakazniciEshop.class.getName()).log(Level.SEVERE, null, ex);
         }
-        model.addRow(new Vector<>());
+        model2.addRow(new Vector<>());
 
         jTable1.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 1) {
-                   // model.setRowCount(0);
+                    if (idObj != 0) {
+                        model2.setRowCount(0);
+                    }                    
                     if (!"".equals(jTextFieldIDZakaznik.getText())) {
                         try {
                             Connection conn = (Connection) DriverManager.getConnection(URL, "root", "");
@@ -150,15 +154,15 @@ public class JPanelZakazniciEshop extends javax.swing.JPanel {
                                 radek.add(cisloObj);
                                 radek.add(datumObj);
                                 radek.add(doprava);
-                                model.addRow(radek);
+                                model2.addRow(radek);
+                                model2.addRow(new Vector<>());
                             }
                         } catch (SQLException ex) {
                             Logger.getLogger(JPanelZakazniciEshop.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     } else {
                         JOptionPane.showMessageDialog(new JFrame(), "Není vybrán zákazník");
-                    }
-                    model.addRow(new Vector<>());
+                    }                    
                 }
             }
         });
@@ -166,7 +170,7 @@ public class JPanelZakazniciEshop extends javax.swing.JPanel {
         jTable2.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 1) {
+                if (e.getClickCount() == 2) {
                     if (!"".equals(jTextFieldIDZakaznik.getText())) {
                         int radek = jTable2.getSelectedRow();
                         Object test = jTable2.getValueAt(radek, 0);
@@ -437,7 +441,7 @@ public class JPanelZakazniciEshop extends javax.swing.JPanel {
 
                     stmt.executeUpdate();
                     stmt.close();
-                    //    refresh();
+                    refresh();
                 }
 
             }
