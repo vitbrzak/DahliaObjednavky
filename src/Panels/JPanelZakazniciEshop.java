@@ -126,7 +126,7 @@ public class JPanelZakazniciEshop extends javax.swing.JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 1) {
-                    model.setRowCount(0);
+                   // model.setRowCount(0);
                     if (!"".equals(jTextFieldIDZakaznik.getText())) {
                         try {
                             Connection conn = (Connection) DriverManager.getConnection(URL, "root", "");
@@ -282,7 +282,7 @@ public class JPanelZakazniciEshop extends javax.swing.JPanel {
                 jButtonFindActionPerformed(evt);
             }
         });
-        add(jButtonFind, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 30, 120, 30));
+        add(jButtonFind, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 30, 140, 30));
 
         jLabelPopisne.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabelPopisne.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -348,7 +348,7 @@ public class JPanelZakazniciEshop extends javax.swing.JPanel {
                 jButtonSetZakaznikActionPerformed(evt);
             }
         });
-        add(jButtonSetZakaznik, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 500, 120, 30));
+        add(jButtonSetZakaznik, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 500, 140, 30));
         add(jTextFieldFirma, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 90, 170, 30));
 
         jLabelTel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N

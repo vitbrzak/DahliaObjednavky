@@ -55,10 +55,11 @@ public class JPanelObjednavkaEshop extends javax.swing.JPanel {
         String[] sloupce = {"Číslo jiřiny", "Název jiřiny", "Množství"};
         DefaultTableModel model = new DefaultTableModel(sloupce, 0);
         jTable1.setModel(model);
+        model.setRowCount(0);
 
         jFormattedTextFieldDatum.setText(datum);
         jComboBoxDoprava.setSelectedIndex(doprava);
-        
+
         if (cisloObj != 0) {
             jTextFieldCisloObj.setText("" + cisloObj);
             try {
@@ -85,12 +86,12 @@ public class JPanelObjednavkaEshop extends javax.swing.JPanel {
             } catch (SQLException ex) {
                 Logger.getLogger(JPanelZakaznici.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } else {
+        } else if (!"".equals(datum)) {
             try {
                 Connection conn = (Connection) DriverManager.getConnection(URL, "root", "");
                 String selectSQL = "SELECT OXORDERARTICLES.OXARTNUM, jiriny.NAZEV, OXORDERARTICLES.OXAMOUNT"
                         + " FROM OXORDERARTICLES JOIN jiriny ON OXORDERARTICLES.OXARTNUM = jiriny.ID_jirina"
-                        + " WHERE OXORDERARTICLES.OXID = ? ORDER BY OXORDERARTICLES.OXARTNUM";
+                        + " WHERE OXORDERARTICLES.OXORDERID = ? ORDER BY OXORDERARTICLES.OXARTNUM";
                 PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
                 preparedStatement.setString(1, OXID);
                 ResultSet rset = preparedStatement.executeQuery();
@@ -164,6 +165,23 @@ public class JPanelObjednavkaEshop extends javax.swing.JPanel {
 
         });
 
+    }
+
+    private void setStavPotvrzeno() {
+        try {
+            Connection conn = (Connection) DriverManager.getConnection(URL, "root", "");
+            String sql = "";
+            sql = "UPDATE stav SET CISLO_OBJ = ?, STAV =? WHERE OXID = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, Integer.parseInt(jTextFieldCisloObj.getText()));
+            stmt.setInt(2, 1);
+            stmt.setString(3, OXID);
+
+            stmt.executeUpdate();
+            stmt.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(JPanelObjednavkaEshop.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -336,9 +354,10 @@ public class JPanelObjednavkaEshop extends javax.swing.JPanel {
                     stmt2.close();
                 }
             }
-
+            
             JOptionPane.showMessageDialog(new JFrame(), "Objednávka úspěšně přidána");
-
+            setStavPotvrzeno();
+            
             //Zavreni frame
             JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
             frame.dispose();
@@ -398,6 +417,7 @@ public class JPanelObjednavkaEshop extends javax.swing.JPanel {
             //Zavreni frame
             JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
             frame.dispose();
+            setStavPotvrzeno();
 
         } catch (SQLException | ParseException ex) {
             Logger.getLogger(JPanelObjednavkaEshop.class.getName()).log(Level.SEVERE, null, ex);
