@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -29,14 +30,13 @@ public class JPanelEshop extends javax.swing.JPanel {
         myInit();
     }
 
-    private SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+    private final SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
     private static final String URL = "jdbc:mysql://localhost/objednavky?useUnicode=true&characterEncoding=UTF-8";
-   
-    
+
     public final void myInit() {
 
         jDialog1.setLocationRelativeTo(null);
-        //  jTextFieldOXID.setVisible(false);
+        
         Vector<Object> vOXID = new Vector<>();
 
         String[] sloupce = {"Číslo obj.", "Datum obj.", "Jméno", "Příjmení", "Město", "Stav"};
@@ -60,7 +60,7 @@ public class JPanelEshop extends javax.swing.JPanel {
                 } else {
                     cisloObj = Integer.toString(rset.getInt(1));
                 }
-                
+
                 vOXID.add(rset.getString(2));
                 String datumObj = format.format(rset.getDate(3));
                 String stav = "";
@@ -84,6 +84,7 @@ public class JPanelEshop extends javax.swing.JPanel {
             }
         } catch (SQLException ex) {
             Logger.getLogger(JPanelZakaznici.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(new JFrame(), "Chyba databáze");
         }
 
         jTable2.addMouseListener(new MouseAdapter() {
@@ -118,7 +119,6 @@ public class JPanelEshop extends javax.swing.JPanel {
         jTable1 = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
-        jButtonAdd = new javax.swing.JButton();
         jButtonRefresh = new javax.swing.JButton();
 
         jDialog1.setTitle("Seznam zákazníků");
@@ -170,170 +170,21 @@ public class JPanelEshop extends javax.swing.JPanel {
 
         add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 30, 560, 430));
 
-        jButtonAdd.setText("Přidat");
-        jButtonAdd.setMaximumSize(new java.awt.Dimension(71, 23));
-        jButtonAdd.setMinimumSize(new java.awt.Dimension(71, 23));
-        jButtonAdd.setPreferredSize(new java.awt.Dimension(71, 23));
-        jButtonAdd.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonAddActionPerformed(evt);
-            }
-        });
-        add(jButtonAdd, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 500, 80, 30));
-
         jButtonRefresh.setText("Obnovit");
         jButtonRefresh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonRefreshActionPerformed(evt);
             }
         });
-        add(jButtonRefresh, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 500, 80, 30));
+        add(jButtonRefresh, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 500, 80, 30));
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButtonAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddActionPerformed
-        //  modify(Work.add);
-    }//GEN-LAST:event_jButtonAddActionPerformed
-
     private void jButtonRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRefreshActionPerformed
-        //  modify(Work.refresh);
+        myInit();
     }//GEN-LAST:event_jButtonRefreshActionPerformed
 
-    /*
-    private void refresh() {
-       
-        try {
-            String str = jTextFieldFind.getText();
-            Connection conn = (Connection) DriverManager.getConnection(URL, "root", "");
-            String selectSQL = "SELECT ID_ZAKAZNIK, JMENO, PRIJMENI, ULICE, POPISNE, MESTO, PSC, FIRMA, TEL, MOBIL"
-                    + " FROM zakaznici WHERE LOWER(JMENO) LIKE LOWER(?) or LOWER(PRIJMENI) LIKE LOWER(?)"
-                    + " or LOWER(MESTO) LIKE LOWER(?) ORDER BY ID_ZAKAZNIK ASC";
-            PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
-            preparedStatement.setString(1, "%" + str + "%");
-            preparedStatement.setString(2, "%" + str + "%");
-            preparedStatement.setString(3, "%" + str + "%");
-            ResultSet rset = preparedStatement.executeQuery();
 
-            String[] sloupce = {"Kód zákazníka", "Jméno", "Příjmeni", "Ulice", "Popisné", "Město", "PSČ", "Firma", "Telefon", "Mobil"};
-            DefaultTableModel model = new DefaultTableModel(sloupce, 0);
-            jTable1.setModel(model);
-            jTable1.setDefaultEditor(Object.class, null); //non editable cells
-
-            while (rset.next()) {
-                int id = rset.getInt("ID_ZAKAZNIK");
-                String jmeno = rset.getString("JMENO");
-                String prijmeni = rset.getString("PRIJMENI");
-                String ulice = rset.getString("ULICE");
-                String popisne = rset.getString("POPISNE");
-                String mesto = rset.getString("MESTO");
-                int psc = rset.getInt("PSC");
-                String firma = rset.getString("FIRMA");
-                String tel = rset.getString("TEL");
-                String mobil = rset.getString("MOBIL");
-                Vector<Object> radek = new Vector<>();
-
-                radek.add(id);
-                radek.add(jmeno);
-                radek.add(prijmeni);
-                radek.add(ulice);
-                radek.add(popisne);
-                radek.add(mesto);
-                radek.add(psc);
-                radek.add(firma);
-                radek.add(tel);
-                radek.add(mobil);
-                model.addRow(radek);
-            }
-
-            jDialog1.setVisible(true);
-        } catch (SQLException ex) {
-            Logger.getLogger(JPanelZakaznici.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-    }
-    
-    private void modify(JPanelZakaznici.Work w) {
-        try {
-            String idZak = jTextFieldIDZakaznik.getText();
-            String jmeno = jTextFieldJmeno.getText();
-            String prijmeni = jTextFieldPrijmeni.getText();
-            String ulice = jTextFieldUlice.getText();
-            String popisne = jTextFieldPopisne.getText();
-            String mesto = jTextFieldMesto.getText();
-            String psc = jTextFieldPSC.getText();
-            String firma = jTextFieldFirma.getText();
-            String tel = jTextFieldTel.getText();
-            String mobil = jTextFieldMobil.getText();
-            // String email = "";
-
-            Connection conn = (Connection) DriverManager.getConnection(URL, "root", "");
-
-            String sql = "";
-            switch (w) {
-                case insert:
-                    sql = "INSERT INTO zakaznici(JMENO, PRIJMENI, ULICE, POPISNE, MESTO, PSC, FIRMA, TEL, MOBIL)"
-                            + " VALUES (?,?,?,?,?,?,?,?,?)";
-                    PreparedStatement stmt = conn.prepareStatement(sql);
-                    stmt.setString(1, jmeno);
-                    stmt.setString(2, prijmeni);
-                    stmt.setString(3, ulice);
-                    stmt.setString(4, popisne);
-                    stmt.setString(5, mesto);
-                    stmt.setInt(6, Integer.parseInt(psc));
-                    stmt.setString(7, firma);
-                    stmt.setString(8, tel);
-                    stmt.setString(9, mobil);
-
-                    stmt.executeUpdate();
-                    stmt.close();
-
-                    JOptionPane.showMessageDialog(new JFrame(), "Zákazník úspěšně přidán");
-                    break;
-                case update:
-                    sql = "UPDATE zakaznici SET JMENO = ?, PRIJMENI = ?, ULICE = ?, POPISNE = ?, MESTO = ?, PSC = ?, FIRMA = ?,"
-                            + " TEL = ?, MOBIL = ? WHERE ID_ZAKAZNIK = ?";
-
-                    PreparedStatement stmt2 = conn.prepareStatement(sql);
-                    stmt2.setString(1, jmeno);
-                    stmt2.setString(2, prijmeni);
-                    stmt2.setString(3, ulice);
-                    stmt2.setString(4, popisne);
-                    stmt2.setString(5, mesto);
-                    stmt2.setInt(6, Integer.parseInt(psc));
-                    stmt2.setString(7, firma);
-                    stmt2.setString(8, tel);
-                    stmt2.setString(9, mobil);
-                    //  stmt2.setString(10, email);
-                    stmt2.setInt(10, Integer.parseInt(idZak));
-
-                    stmt2.executeUpdate();
-                    stmt2.close();
-
-                    JOptionPane.showMessageDialog(new JFrame(), "Zákazník úspěšně upraven");
-                    break;
-                case delete:
-                    sql = "DELETE FROM zakaznici WHERE ID_ZAKAZNIK = ?";
-
-                    PreparedStatement stmt3 = conn.prepareStatement(sql);
-                    stmt3.setInt(1, Integer.parseInt(idZak));
-
-                    stmt3.executeUpdate();
-                    stmt3.close();
-
-                    JOptionPane.showMessageDialog(new JFrame(), "Zákazník úspěšně smazán");
-                    break;
-            }
-
-        } catch (SQLException ex) {
-            Logger.getLogger(MenuFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        refresh(); 
-    }
-    
-    private enum Work {
-        add, refresh
-    }
-     */
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonAdd;
     private javax.swing.JButton jButtonRefresh;
     private javax.swing.JDialog jDialog1;
     private javax.swing.JScrollPane jScrollPane1;

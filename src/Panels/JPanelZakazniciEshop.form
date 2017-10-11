@@ -90,13 +90,22 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Hledat"/>
         <Property name="actionCommand" type="java.lang.String" value="Naj&#xed;t"/>
+        <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[71, 23]"/>
+        </Property>
+        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[71, 23]"/>
+        </Property>
+        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[71, 23]"/>
+        </Property>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonFindActionPerformed"/>
       </Events>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="250" y="30" width="100" height="-1"/>
+          <AbsoluteConstraints x="240" y="30" width="120" height="30"/>
         </Constraint>
       </Constraints>
     </Component>
@@ -285,9 +294,9 @@
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="javax.swing.JButton" name="jButtonAdd">
+    <Component class="javax.swing.JButton" name="jButtonSetZakaznik">
       <Properties>
-        <Property name="text" type="java.lang.String" value="P&#x159;idat"/>
+        <Property name="text" type="java.lang.String" value="Potvrdit z&#xe1;kazn&#xed;ka"/>
         <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[71, 23]"/>
         </Property>
@@ -299,11 +308,11 @@
         </Property>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonAddActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonSetZakaznikActionPerformed"/>
       </Events>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="270" y="500" width="80" height="30"/>
+          <AbsoluteConstraints x="240" y="500" width="120" height="30"/>
         </Constraint>
       </Constraints>
     </Component>
