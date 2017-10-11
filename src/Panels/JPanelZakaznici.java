@@ -129,7 +129,7 @@ public class JPanelZakaznici extends javax.swing.JPanel {
                                 Logger.getLogger(JPanelObjednavka.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         }
-                        ObjednavkaFrame frame = new ObjednavkaFrame(Integer.parseInt(jTextFieldIDZakaznik.getText()), idObj, cisloObj, datum, doprava);
+                        ObjednavkaFrame frame = new ObjednavkaFrame(0,"",Integer.parseInt(jTextFieldIDZakaznik.getText()), idObj, cisloObj, datum, doprava);
                         frame.setVisible(true);
                     }
                 }

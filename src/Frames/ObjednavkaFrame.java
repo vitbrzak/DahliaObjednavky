@@ -9,12 +9,16 @@ public final class ObjednavkaFrame extends javax.swing.JFrame {
     /**
      * Creates new form ObjednavkaFrame
      */
+    public static int volba;  // 0 = JPanelObjednavka, 1 = JPanelObjednavkaEshop
+    public static String OXID;
     public static int idZakaznik;
     public static int idObj;
     public static int cisloObj;
     public static String datum;
     public static int doprava;
-    public ObjednavkaFrame(int idZakaznik, int idObj, int cisloObj, String datum, int doprava) {
+    public ObjednavkaFrame(int volba, String OXID, int idZakaznik, int idObj, int cisloObj, String datum, int doprava) {
+        ObjednavkaFrame.volba = volba;
+        ObjednavkaFrame.OXID = OXID;
         ObjednavkaFrame.idZakaznik = idZakaznik;
         ObjednavkaFrame.idObj = idObj;
         ObjednavkaFrame.cisloObj = cisloObj;
@@ -26,7 +30,16 @@ public final class ObjednavkaFrame extends javax.swing.JFrame {
 
 
     public void myInit() {
-        
+        jPanelObjednavka.setVisible(false);
+        jPanelObjednavkaEshop.setVisible(false);
+        switch (volba) {
+            case 0:
+                jPanelObjednavka.setVisible(true);
+                break;
+            case 1:
+                jPanelObjednavkaEshop.setVisible(true);
+                break;
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -34,6 +47,7 @@ public final class ObjednavkaFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanelObjednavka = new Panels.JPanelObjednavka(idZakaznik, idObj, cisloObj, datum, doprava);
+        jPanelObjednavkaEshop = new Panels.JPanelObjednavkaEshop(OXID, idZakaznik, idObj, cisloObj, datum, doprava);
 
         setTitle("Objednávka");
         setBackground(new java.awt.Color(204, 255, 153));
@@ -41,10 +55,10 @@ public final class ObjednavkaFrame extends javax.swing.JFrame {
         setPreferredSize(new java.awt.Dimension(600, 610));
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
         jPanelObjednavka.setMinimumSize(new java.awt.Dimension(600, 610));
         jPanelObjednavka.setPreferredSize(new java.awt.Dimension(600, 610));
         getContentPane().add(jPanelObjednavka, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 610));
+        getContentPane().add(jPanelObjednavkaEshop, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 610));
 
         getAccessibleContext().setAccessibleName("Objednavka");
 
@@ -86,14 +100,13 @@ public final class ObjednavkaFrame extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ObjednavkaFrame(idZakaznik, idObj, cisloObj, datum, doprava).setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new ObjednavkaFrame(volba, OXID, idZakaznik, idObj, cisloObj, datum, doprava).setVisible(true);
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private Panels.JPanelObjednavka jPanelObjednavka;
+    private Panels.JPanelObjednavkaEshop jPanelObjednavkaEshop;
     // End of variables declaration//GEN-END:variables
 }

@@ -48,6 +48,7 @@ public class JPanelObjednavka extends javax.swing.JPanel {
 
     private static final String URL = "jdbc:mysql://localhost/objednavky?useUnicode=true&characterEncoding=UTF-8";
 
+
     public final void myInit() {
 
         String[] sloupce = {"Číslo jiřiny", "Název jiřiny", "Množství"};

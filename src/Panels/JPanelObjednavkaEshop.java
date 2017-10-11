@@ -29,6 +29,7 @@ public class JPanelObjednavkaEshop extends javax.swing.JPanel {
     /**
      * Creates new form JPanelObjednavka
      */
+    String OXID;
     int idZakaznik;
     int idObj;
     int cisloObj;
@@ -36,7 +37,8 @@ public class JPanelObjednavkaEshop extends javax.swing.JPanel {
     int doprava;
     private final SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
 
-    public JPanelObjednavkaEshop(int idZakaznik, int idObj, int cisloObj, String datum, int doprava) {
+    public JPanelObjednavkaEshop(String OXID, int idZakaznik, int idObj, int cisloObj, String datum, int doprava) {
+        this.OXID = OXID;
         this.idZakaznik = idZakaznik;
         this.idObj = idObj;
         this.cisloObj = cisloObj;
@@ -54,11 +56,11 @@ public class JPanelObjednavkaEshop extends javax.swing.JPanel {
         DefaultTableModel model = new DefaultTableModel(sloupce, 0);
         jTable1.setModel(model);
 
+        jFormattedTextFieldDatum.setText(datum);
+        jComboBoxDoprava.setSelectedIndex(doprava);
+        
         if (cisloObj != 0) {
             jTextFieldCisloObj.setText("" + cisloObj);
-            jFormattedTextFieldDatum.setText(datum);
-            jComboBoxDoprava.setSelectedIndex(doprava);
-
             try {
                 Connection conn = (Connection) DriverManager.getConnection(URL, "root", "");
                 String selectSQL = "SELECT polozky.ID_JIRINA, jiriny.NAZEV, MNOZSTVI"
@@ -83,6 +85,31 @@ public class JPanelObjednavkaEshop extends javax.swing.JPanel {
             } catch (SQLException ex) {
                 Logger.getLogger(JPanelZakaznici.class.getName()).log(Level.SEVERE, null, ex);
             }
+        } else {
+            try {
+                Connection conn = (Connection) DriverManager.getConnection(URL, "root", "");
+                String selectSQL = "SELECT OXORDERARTICLES.OXARTNUM, jiriny.NAZEV, OXORDERARTICLES.OXAMOUNT"
+                        + " FROM OXORDERARTICLES JOIN jiriny ON OXORDERARTICLES.OXARTNUM = jiriny.ID_jirina"
+                        + " WHERE OXORDERARTICLES.OXID = ? ORDER BY OXORDERARTICLES.OXARTNUM";
+                PreparedStatement preparedStatement = conn.prepareStatement(selectSQL);
+                preparedStatement.setString(1, OXID);
+                ResultSet rset = preparedStatement.executeQuery();
+
+                while (rset.next()) {
+
+                    int idJirina = rset.getInt(1);
+                    String nazev = rset.getString(2);
+                    int mnozstvi = rset.getInt(3);
+                    Vector<Object> radek = new Vector<>();
+
+                    radek.add(idJirina);
+                    radek.add(nazev);
+                    radek.add(mnozstvi);
+                    model.addRow(radek);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(JPanelZakaznici.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         model.addRow(new Vector<>());
@@ -93,12 +120,11 @@ public class JPanelObjednavkaEshop extends javax.swing.JPanel {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 if (jTable1.isCellSelected(jTable1.getSelectedRow(), 0)) {
-                    
-                    
+
                     if (jTable1.getCellEditor() != null) {
                         jTable1.getCellEditor().stopCellEditing();
                     }
-                    
+
                     if (!"".equals(jTable1.getValueAt(jTable1.getSelectedRow(), 0))) {
                         int cislo = Integer.parseInt(jTable1.getValueAt((int) jTable1.getSelectedRow(), 0).toString());
                         String nazev = "";
@@ -122,9 +148,9 @@ public class JPanelObjednavkaEshop extends javax.swing.JPanel {
                         jTable1.setValueAt("1", (int) jTable1.getSelectedRow(), 2);
                     } else {
                         model.removeRow(jTable1.getSelectedRow());
-                        jTable1.changeSelection(jTable1.getRowCount()-1, 0, false, false);
+                        jTable1.changeSelection(jTable1.getRowCount() - 1, 0, false, false);
                     }
-                    
+
                 } else if (jTable1.isCellSelected(jTable1.getSelectedRow(), 2)) {
                     if (jTable1.getValueAt(jTable1.getRowCount() - 1, 0) != null) {
                         model.addRow(new Vector<>());
@@ -154,7 +180,6 @@ public class JPanelObjednavkaEshop extends javax.swing.JPanel {
         jTable1 = new javax.swing.JTable();
         jButtonAdd = new javax.swing.JButton();
         jButtonUpdate = new javax.swing.JButton();
-        jButtonDelete = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(204, 255, 153));
         setMinimumSize(new java.awt.Dimension(600, 610));
@@ -215,16 +240,6 @@ public class JPanelObjednavkaEshop extends javax.swing.JPanel {
             }
         });
 
-        jButtonDelete.setText("Smazat");
-        jButtonDelete.setMaximumSize(new java.awt.Dimension(80, 30));
-        jButtonDelete.setMinimumSize(new java.awt.Dimension(80, 30));
-        jButtonDelete.setPreferredSize(new java.awt.Dimension(80, 30));
-        jButtonDelete.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonDeleteActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -248,15 +263,14 @@ public class JPanelObjednavkaEshop extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jFormattedTextFieldDatum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jComboBoxDoprava, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(165, 165, 165)
-                        .addComponent(jButtonAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButtonUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButtonDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(jComboBoxDoprava, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                 .addContainerGap(25, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jButtonAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButtonUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(207, 207, 207))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -278,8 +292,7 @@ public class JPanelObjednavkaEshop extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonAdd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonDelete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButtonUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(50, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -302,7 +315,7 @@ public class JPanelObjednavkaEshop extends javax.swing.JPanel {
             stmt.close();
 
             int maxIDObj = 0;
-            
+
             PreparedStatement stmtObj = conn.prepareStatement("SELECT MAX(ID_OBJEDNAVKA) FROM objednavky");
             ResultSet rs = stmtObj.executeQuery();
             if (rs.next()) {
@@ -391,44 +404,9 @@ public class JPanelObjednavkaEshop extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jButtonUpdateActionPerformed
 
-    private void jButtonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteActionPerformed
-        try {
-            Connection conn = (Connection) DriverManager.getConnection(URL, "root", "");
-
-            for (int i = 0; i < jTable1.getRowCount(); i++) {
-                Object value = jTable1.getValueAt(i, 0);
-                if (value != null && !"".equals(value)) {
-                    String sql = "DELETE FROM polozky WHERE ID_OBJEDNAVKA = ?";
-                    PreparedStatement stmt = conn.prepareStatement(sql);
-                    stmt.setInt(1, idObj);
-
-                    stmt.executeUpdate();
-                    stmt.close();
-                }
-            }
-
-            String sql = "DELETE FROM objednavky WHERE ID_OBJEDNAVKA = ?";
-            PreparedStatement stmt2 = conn.prepareStatement(sql);
-            stmt2.setInt(1, idObj);
-
-            stmt2.executeUpdate();
-            stmt2.close();
-
-            JOptionPane.showMessageDialog(new JFrame(), "Objednávka úspěšně smazána");
-
-            //Zavreni frame
-            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
-            frame.dispose();
-
-        } catch (SQLException ex) {
-            Logger.getLogger(JPanelObjednavkaEshop.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_jButtonDeleteActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAdd;
-    private javax.swing.JButton jButtonDelete;
     private javax.swing.JButton jButtonUpdate;
     private javax.swing.JComboBox<String> jComboBoxDoprava;
     private javax.swing.JFormattedTextField jFormattedTextFieldDatum;
