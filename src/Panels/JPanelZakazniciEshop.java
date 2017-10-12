@@ -286,7 +286,7 @@ public class JPanelZakazniciEshop extends javax.swing.JPanel {
                 jButtonFindActionPerformed(evt);
             }
         });
-        add(jButtonFind, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 30, 140, 30));
+        add(jButtonFind, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 30, 140, 30));
 
         jLabelPopisne.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabelPopisne.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);

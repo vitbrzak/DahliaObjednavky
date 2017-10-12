@@ -50,6 +50,7 @@ public final class ObjednavkaFrame extends javax.swing.JFrame {
         jPanelObjednavkaEshop = new Panels.JPanelObjednavkaEshop(OXID, idZakaznik, idObj, cisloObj, datum, doprava);
 
         setTitle("Objednávka");
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(204, 255, 153));
         setMinimumSize(new java.awt.Dimension(600, 610));
         setPreferredSize(new java.awt.Dimension(600, 610));
