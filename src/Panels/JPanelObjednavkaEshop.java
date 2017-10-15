@@ -355,6 +355,8 @@ public class JPanelObjednavkaEshop extends javax.swing.JPanel {
                 }
             }
             
+            
+            
             JOptionPane.showMessageDialog(new JFrame(), "Objednávka úspěšně přidána");
             setStavPotvrzeno();
             

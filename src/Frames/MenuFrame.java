@@ -25,7 +25,7 @@ public class MenuFrame extends javax.swing.JFrame {
         }
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Správa objednávek");
+        setTitle("Objednávkový systém DAHLIA  v0.9");
         setMaximumSize(new java.awt.Dimension(600, 610));
         setMinimumSize(new java.awt.Dimension(600, 610));
         setPreferredSize(new java.awt.Dimension(600, 610));

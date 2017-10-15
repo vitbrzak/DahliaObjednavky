@@ -25,7 +25,7 @@ import javax.swing.table.DefaultTableModel;
 public class JPanelZakazniciEshop extends javax.swing.JPanel {
 
     String OXID;
-    int idObj; 
+    int idObj;
 
     public JPanelZakazniciEshop(String OXID, int idObj) throws SQLException {
         this.idObj = idObj;
@@ -118,11 +118,11 @@ public class JPanelZakazniciEshop extends javax.swing.JPanel {
                 radek.add(datumObj);
                 radek.add(doprava);
                 model2.addRow(radek);
+                model2.addRow(new Vector<>());
             }
         } catch (SQLException ex) {
             Logger.getLogger(JPanelZakazniciEshop.class.getName()).log(Level.SEVERE, null, ex);
         }
-        model2.addRow(new Vector<>());
 
         jTable1.addMouseListener(new MouseAdapter() {
             @Override
@@ -130,7 +130,7 @@ public class JPanelZakazniciEshop extends javax.swing.JPanel {
                 if (e.getClickCount() == 1) {
                     if (idObj != 0) {
                         model2.setRowCount(0);
-                    }                    
+                    }
                     if (!"".equals(jTextFieldIDZakaznik.getText())) {
                         try {
                             Connection conn = (Connection) DriverManager.getConnection(URL, "root", "");
@@ -162,7 +162,7 @@ public class JPanelZakazniciEshop extends javax.swing.JPanel {
                         }
                     } else {
                         JOptionPane.showMessageDialog(new JFrame(), "Není vybrán zákazník");
-                    }                    
+                    }
                 }
             }
         });
@@ -198,7 +198,7 @@ public class JPanelZakazniciEshop extends javax.swing.JPanel {
                                 Logger.getLogger(JPanelObjednavka.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         }
-                        ObjednavkaFrame frame = new ObjednavkaFrame(1,OXID,Integer.parseInt(jTextFieldIDZakaznik.getText()), idObj, cisloObj, datum, doprava);
+                        ObjednavkaFrame frame = new ObjednavkaFrame(1, OXID, Integer.parseInt(jTextFieldIDZakaznik.getText()), idObj, cisloObj, datum, doprava);
                         frame.setVisible(true);
                     }
                 }
