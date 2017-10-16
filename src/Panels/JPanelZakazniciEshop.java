@@ -26,6 +26,7 @@ public class JPanelZakazniciEshop extends javax.swing.JPanel {
 
     String OXID;
     int idObj;
+    Boolean kontrola = false;
 
     public JPanelZakazniciEshop(String OXID, int idObj) throws SQLException {
         this.idObj = idObj;
@@ -90,7 +91,6 @@ public class JPanelZakazniciEshop extends javax.swing.JPanel {
                 jTextFieldMesto.setText(jTable1.getValueAt((int) jTable1.getSelectedRow(), 5).toString());
                 jTextFieldPSC.setText(jTable1.getValueAt((int) jTable1.getSelectedRow(), 6).toString());
                 jTextFieldTel.setText(jTable1.getValueAt((int) jTable1.getSelectedRow(), 8).toString());
-                jTextFieldEmail.setText(jTable1.getValueAt((int) jTable1.getSelectedRow(), 10).toString());
             }
         });
 
@@ -160,8 +160,6 @@ public class JPanelZakazniciEshop extends javax.swing.JPanel {
                         } catch (SQLException ex) {
                             Logger.getLogger(JPanelZakazniciEshop.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                    } else {
-                        JOptionPane.showMessageDialog(new JFrame(), "Není vybrán zákazník");
                     }
                 }
             }
@@ -171,7 +169,7 @@ public class JPanelZakazniciEshop extends javax.swing.JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
-                    if (!"".equals(jTextFieldIDZakaznik.getText())) {
+                    if (kontrola = true) {
                         int radek = jTable2.getSelectedRow();
                         Object test = jTable2.getValueAt(radek, 0);
                         int cisloObj = 0;
@@ -200,6 +198,9 @@ public class JPanelZakazniciEshop extends javax.swing.JPanel {
                         }
                         ObjednavkaFrame frame = new ObjednavkaFrame(1, OXID, Integer.parseInt(jTextFieldIDZakaznik.getText()), idObj, cisloObj, datum, doprava);
                         frame.setVisible(true);
+                        kontrola = false;
+                    } else {
+                        JOptionPane.showMessageDialog(new JFrame(), "Není potvrzen zákazník");
                     }
                 }
             }
@@ -421,6 +422,8 @@ public class JPanelZakazniciEshop extends javax.swing.JPanel {
                     stmt.executeUpdate();
                     stmt.close();
                     jTextFieldIDZakaznik.setText(Integer.toString(maxID()));
+                    JOptionPane.showMessageDialog(new JFrame(), "Zákazník úspěšně potvrzen");
+                    kontrola = true;
                 }
             } else {
                 sql = "UPDATE zakaznici SET JMENO = ?, PRIJMENI = ?, ULICE = ?, POPISNE = ?, MESTO = ?, PSC = ?, FIRMA = ?,"
@@ -443,13 +446,13 @@ public class JPanelZakazniciEshop extends javax.swing.JPanel {
                     stmt.close();
                     refresh();
                 }
-
+                JOptionPane.showMessageDialog(new JFrame(), "Zákazník úspěšně potvrzen");
+                kontrola = true;
             }
         } catch (SQLException ex) {
             Logger.getLogger(MenuFrame.class.getName()).log(Level.SEVERE, null, ex);
             JOptionPane.showMessageDialog(new JFrame(), "Chyba zadání");
         }
-        JOptionPane.showMessageDialog(new JFrame(), "Zákazník úspěšně potvrzen");
     }//GEN-LAST:event_jButtonSetZakaznikActionPerformed
 
     private void find() {
